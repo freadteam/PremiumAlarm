@@ -137,7 +137,6 @@ class ViewController: UIViewController, AVAudioPlayerDelegate, UITextFieldDelega
             if nowWeekDayLabel.text == nowWeekDayLabel.text && nowTimeLabel.text == alarmTimeTextField.text! {
                 //ゆっくり
                 goHomeaudioPlayer.play()
-                goHomeaudioPlayer.numberOfLoops = 5
 
                 //蛍の光-------------------------
                 audioPlayer.play()
