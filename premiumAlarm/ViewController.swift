@@ -12,18 +12,28 @@ import AVFoundation
 class ViewController: UIViewController, AVAudioPlayerDelegate, UITextFieldDelegate {
 
     @IBOutlet weak var alarmWeekDayTextFiled: UITextField!
-    @IBOutlet weak var alarmHHTextFiled: UITextField!
-    @IBOutlet weak var alarmMMTextField: UITextField!
+    var weekDayPickerView = UIPickerView()
+    var weekDayArray =  ["月曜日", "火曜日", "水曜日", "木曜日", "金曜日", "土曜日", "日曜日"]
+    
+    @IBOutlet weak var alarmTimeTextField: UITextField!
+    var timePickerView = UIPickerView()
+    var timeArray = [[00, 01,02,03,04,05,06,07,08,09,10, 11, 12, 13, 14, 15, 16, 17, 18 ,19, 20, 21, 22, 23],
+                     [00, 01,02,03,04,05,06,07,08,09,
+                      10, 11, 12, 13, 14, 15, 16, 17, 18 ,19,
+                      20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
+                      30, 31, 32, 33, 34, 35, 36, 37, 38 ,39,
+                      40, 41, 42, 43, 44, 45, 46, 47, 48 ,49,
+                      50, 51, 52, 53, 54, 55, 56, 57, 58 ,59]]
+    
     @IBOutlet weak var nowTimeLabel: UILabel!
     @IBOutlet weak var nowWeekDayLabel: UILabel!
     @IBOutlet weak var alarmSwitch: UISwitch!
     @IBOutlet weak var timerButton: UIButton!
     @IBOutlet weak var stopButton: UIButton!
-     var timePickerView = UIPickerView()
-    
-    var weekDayArray =  ["月曜日", "火曜日", "水曜日", "木曜日", "金曜日", "土曜日", "日曜日"]
+
     var audioPlayer:AVAudioPlayer!
     var goHomeaudioPlayer:AVAudioPlayer!
+    var silentAudioPlayer:AVAudioPlayer!
     var date = Date()
     var Counttimer = Timer()                 // Timerクラス
     var startTime: TimeInterval = 0     // Startボタンを押した時刻
@@ -33,6 +43,24 @@ class ViewController: UIViewController, AVAudioPlayerDelegate, UITextFieldDelega
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        alarmWeekDayTextFiled.placeholder = "曜日"
+        alarmTimeTextField.placeholder = "時刻"
+        //無音
+        let silentPath = Bundle.main.path(forResource: "silentMusic", ofType:"mp3")!
+        let silentUrl = URL(fileURLWithPath: silentPath)
+        // auido を再生するプレイヤーを作成する
+        var audioError2:NSError?
+        do {
+            silentAudioPlayer = try AVAudioPlayer(contentsOf: silentUrl)
+        } catch let error as NSError {
+            audioError2 = error
+            silentAudioPlayer = nil
+        }
+        // エラーが起きたとき
+        if let error = audioError2 {
+            print("Error \(error.localizedDescription)")
+        }
+        
         //ゆっくり
         let goHomePath = Bundle.main.path(forResource: "goHome", ofType:"mp3")!
         let goHomeUrl = URL(fileURLWithPath: goHomePath)
@@ -64,10 +92,13 @@ class ViewController: UIViewController, AVAudioPlayerDelegate, UITextFieldDelega
         if let error = audioError {
             print("Error \(error.localizedDescription)")
         }
+        
         audioPlayer.delegate = self
         audioPlayer.prepareToPlay()
         goHomeaudioPlayer.delegate = self
         goHomeaudioPlayer.prepareToPlay()
+        silentAudioPlayer.delegate = self
+        silentAudioPlayer.prepareToPlay()
         
         // 1秒ごとに「displayClock」を実行する
         let timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(displayClock), userInfo: nil, repeats: true)
@@ -86,27 +117,8 @@ class ViewController: UIViewController, AVAudioPlayerDelegate, UITextFieldDelega
         //曜日を表示
         nowWeekDayLabel.text = date.weekday
         
-        settingPickerViewFunc()
-        closeTextField()
-    }
-    
-    
-    
-    func closeTextField() {
-        let kbToolBar = UIToolbar(frame: CGRect(x: 0, y: 0, width: 320, height: 40))
-        kbToolBar.barStyle = UIBarStyle.default  // スタイルを設定
-        kbToolBar.sizeToFit()  // 画面幅に合わせてサイズを変更
-        // スペーサー
-        let spacer = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: self, action: nil)
-        // 閉じるボタン
-        let commitButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.done, target: self, action: #selector(self.commitButtonTapped))
-        kbToolBar.items = [spacer, commitButton]
-        alarmHHTextFiled.inputAccessoryView = kbToolBar
-        alarmMMTextField.inputAccessoryView = kbToolBar
-    }
-    
-    @objc func commitButtonTapped() {
-        self.view.endEditing(true)
+        settingWeekdayPickerViewFunc()
+        settingTimePickerViewFunc()
     }
     
     // 現在時刻を表示する処理
@@ -122,11 +134,10 @@ class ViewController: UIViewController, AVAudioPlayerDelegate, UITextFieldDelega
     // 金曜日の19:55かを判断して音を鳴らすか決める
     @objc func checkDate() {
         if isOnSwitch == true {
-            if nowWeekDayLabel.text == nowWeekDayLabel.text && nowTimeLabel.text == alarmHHTextFiled.text! + ":" + alarmMMTextField.text! {
-    
+            if nowWeekDayLabel.text == nowWeekDayLabel.text && nowTimeLabel.text == alarmTimeTextField.text! {
                 //ゆっくり
                 goHomeaudioPlayer.play()
-                goHomeaudioPlayer.numberOfLoops = 4
+                goHomeaudioPlayer.numberOfLoops = 5
 
                 //蛍の光-------------------------
                 audioPlayer.play()
@@ -146,24 +157,25 @@ class ViewController: UIViewController, AVAudioPlayerDelegate, UITextFieldDelega
         // Dispose of any resources that can be recreated.
     }
     
-    //textFieldを閉じるコードを書く
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        return true
-    }
-    
     //アラームのセット
     @IBAction func switchONOFF(_ sender: UISwitch) {
         if sender.isOn == true {
+            //無音スタート
+            silentAudioPlayer.play()
+            silentAudioPlayer.numberOfLoops = -1
+            
             isOnSwitch = true
             nowTimeLabel.textColor = .red
             nowWeekDayLabel.textColor = .red
             stopButton.backgroundColor = .red
         } else {
+            //無音リセット
+            silentAudioPlayer.stop()
+            
             isOnSwitch = false
             audioPlayer.currentTime = 0
-            nowTimeLabel.textColor = .black
-            nowWeekDayLabel.textColor = .black
+            nowTimeLabel.textColor = .white
+            nowWeekDayLabel.textColor = .white
             stopButton.backgroundColor = .blue
             stopButton.backgroundColor = .blue
             //再生してら曲止める
@@ -171,6 +183,9 @@ class ViewController: UIViewController, AVAudioPlayerDelegate, UITextFieldDelega
                 audioPlayer.stop()
                 //セーブ
                 //self.saveData()
+            }
+            if ( goHomeaudioPlayer.isPlaying ){
+                goHomeaudioPlayer.stop()
             }
         }
         
@@ -180,58 +195,99 @@ class ViewController: UIViewController, AVAudioPlayerDelegate, UITextFieldDelega
     @IBAction func tappedStopButton(_ sender : AnyObject) {
         if ( audioPlayer.isPlaying ){
             audioPlayer.stop()
+            silentAudioPlayer.stop()
             alarmSwitch.isOn = false
             //初めから再生
             audioPlayer.currentTime = 0
             //セーブ
             //self.saveData()
         }
+
+        if ( goHomeaudioPlayer.isPlaying ){
+            goHomeaudioPlayer.stop()
+        }
     }
 
-    
 }
-
-
-
-
 
 
 extension ViewController : UIPickerViewDelegate, UIPickerViewDataSource {
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 1
+        switch pickerView.tag {
+        case 1:
+            return 1
+        case 2:
+            return 2
+        default:
+            return 1
+        }
     }
     
     //表示列
     func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
-        return 1
+        switch pickerView.tag {
+        case 1:
+            return 1
+        case 2:
+            return 2
+        default:
+            return 1
+        }
     }
     
     //表示個数
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-       return weekDayArray.count
+        switch pickerView.tag {
+        case 1:
+            return weekDayArray.count
+        case 2:
+            return timeArray[component].count
+        default:
+            return 1
+        }
     }
     
     //表示内容
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return weekDayArray[row]
+        switch pickerView.tag {
+        case 1:
+            return weekDayArray[row]
+        case 2:
+            return String(format: "%02d", timeArray[component][row])
+                //String(timeArray[component][row])
+        default:
+           return "hoge"
+        }
     }
     
     //選択時
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        alarmWeekDayTextFiled.text = weekDayArray[row]
+        
+        switch pickerView.tag {
+        case 1:
+           alarmWeekDayTextFiled.text = weekDayArray[row]
+        case 2:
+            //コンポーネントごとに現在選択されているデータを取得する。
+            let data1 = self.pickerView(pickerView, titleForRow: pickerView.selectedRow(inComponent: 0), forComponent: 0)
+            let data2 = self.pickerView(pickerView, titleForRow: pickerView.selectedRow(inComponent: 1), forComponent: 1)
+            alarmTimeTextField.text = data1! + ":" + data2!
+        default:
+            break
+        }
     }
     
-    func settingPickerViewFunc() {
+    
+    func settingWeekdayPickerViewFunc() {
         
-        timePickerView.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: timePickerView.bounds.size.height)
-        timePickerView.tag = 1
-        timePickerView.delegate   = self
-        timePickerView.dataSource = self
+        weekDayPickerView.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: weekDayPickerView.bounds.size.height)
+        weekDayPickerView.tag = 1
+        weekDayPickerView.delegate   = self
+        weekDayPickerView.dataSource = self
         
-        let vi1 = UIView(frame: timePickerView.bounds)
+        let vi1 = UIView(frame: weekDayPickerView.bounds)
         vi1.backgroundColor = UIColor.white
-        vi1.addSubview(timePickerView)
+        vi1.addSubview(weekDayPickerView)
         
         alarmWeekDayTextFiled.inputView = vi1
         
@@ -247,9 +303,35 @@ extension ViewController : UIPickerViewDelegate, UIPickerViewDataSource {
         alarmWeekDayTextFiled.inputAccessoryView = toolBar1
     }
     
+    func settingTimePickerViewFunc() {
+        
+        timePickerView.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: timePickerView.bounds.size.height)
+        timePickerView.tag = 2
+        timePickerView.delegate   = self
+        timePickerView.dataSource = self
+        
+        let vi2 = UIView(frame: timePickerView.bounds)
+        vi2.backgroundColor = UIColor.white
+        vi2.addSubview(timePickerView)
+        
+        alarmTimeTextField.inputView = vi2
+        
+        let toolBar2 = UIToolbar()
+        toolBar2.barStyle = UIBarStyle.default
+        toolBar2.isTranslucent = true
+        toolBar2.tintColor = UIColor.black
+        let doneButton2   = UIBarButtonItem(title: "選択", style: UIBarButtonItemStyle.done, target: self, action: #selector(ViewController.donePressed))
+        let spaceButton2  = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: nil, action: nil)
+        toolBar2.setItems([spaceButton2, doneButton2], animated: false)
+        toolBar2.isUserInteractionEnabled = true
+        toolBar2.sizeToFit()
+        alarmTimeTextField.inputAccessoryView = toolBar2
+    }
+    
     // Done
     @objc func donePressed() {
         view.endEditing(true)
-        
     }
+    
+    
 }
