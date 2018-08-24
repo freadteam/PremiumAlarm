@@ -8,14 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		2C4974A22126F87F006A60D3 /* silentMusic.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 2C4974A12126F87F006A60D3 /* silentMusic.mp3 */; };
+		2C4ADE7A2130224400EFC6D4 /* goHome.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 2C4ADE792130224400EFC6D4 /* goHome.mp3 */; };
 		2C85ACD12101FB3D007E88FA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C85ACD02101FB3D007E88FA /* AppDelegate.swift */; };
 		2C85ACD32101FB3D007E88FA /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C85ACD22101FB3D007E88FA /* ViewController.swift */; };
 		2C85ACD62101FB3D007E88FA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2C85ACD42101FB3D007E88FA /* Main.storyboard */; };
 		2C85ACD82101FB3F007E88FA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C85ACD72101FB3F007E88FA /* Assets.xcassets */; };
 		2C85ACDB2101FB3F007E88FA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2C85ACD92101FB3F007E88FA /* LaunchScreen.storyboard */; };
 		2C85AD0321020197007E88FA /* hotarunohikari.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 2C85AD0021020197007E88FA /* hotarunohikari.mp3 */; };
-		2C85AD0421020197007E88FA /* hotaru.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2C85AD0121020197007E88FA /* hotaru.jpg */; };
-		2C85AD0521020197007E88FA /* goHome.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 2C85AD0221020197007E88FA /* goHome.mp3 */; };
 		2C85AD072102093F007E88FA /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C85AD062102093F007E88FA /* CustomButton.swift */; };
 		2C85AD0921020957007E88FA /* Date+Weeday.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C85AD0821020957007E88FA /* Date+Weeday.swift */; };
 		2C9111A22127BB29006CEEB7 /* hotaru2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2C9111A12127BB29006CEEB7 /* hotaru2.jpg */; };
@@ -23,6 +22,7 @@
 
 /* Begin PBXFileReference section */
 		2C4974A12126F87F006A60D3 /* silentMusic.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = silentMusic.mp3; sourceTree = "<group>"; };
+		2C4ADE792130224400EFC6D4 /* goHome.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = goHome.mp3; sourceTree = "<group>"; };
 		2C85ACCD2101FB3D007E88FA /* premiumAlarm.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = premiumAlarm.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C85ACD02101FB3D007E88FA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2C85ACD22101FB3D007E88FA /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -31,8 +31,6 @@
 		2C85ACDA2101FB3F007E88FA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2C85ACDC2101FB3F007E88FA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2C85AD0021020197007E88FA /* hotarunohikari.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = hotarunohikari.mp3; sourceTree = "<group>"; };
-		2C85AD0121020197007E88FA /* hotaru.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = hotaru.jpg; sourceTree = "<group>"; };
-		2C85AD0221020197007E88FA /* goHome.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = goHome.mp3; sourceTree = "<group>"; };
 		2C85AD062102093F007E88FA /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
 		2C85AD0821020957007E88FA /* Date+Weeday.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Weeday.swift"; sourceTree = "<group>"; };
 		2C9111A12127BB29006CEEB7 /* hotaru2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = hotaru2.jpg; sourceTree = "<group>"; };
@@ -76,9 +74,8 @@
 				2C85ACD72101FB3F007E88FA /* Assets.xcassets */,
 				2C85ACD92101FB3F007E88FA /* LaunchScreen.storyboard */,
 				2C85ACDC2101FB3F007E88FA /* Info.plist */,
-				2C85AD0121020197007E88FA /* hotaru.jpg */,
 				2C9111A12127BB29006CEEB7 /* hotaru2.jpg */,
-				2C85AD0221020197007E88FA /* goHome.mp3 */,
+				2C4ADE792130224400EFC6D4 /* goHome.mp3 */,
 				2C4974A12126F87F006A60D3 /* silentMusic.mp3 */,
 				2C85AD0021020197007E88FA /* hotarunohikari.mp3 */,
 			);
@@ -151,11 +148,10 @@
 				2C85AD0321020197007E88FA /* hotarunohikari.mp3 in Resources */,
 				2C85ACDB2101FB3F007E88FA /* LaunchScreen.storyboard in Resources */,
 				2C85ACD82101FB3F007E88FA /* Assets.xcassets in Resources */,
-				2C85AD0421020197007E88FA /* hotaru.jpg in Resources */,
 				2C85ACD62101FB3D007E88FA /* Main.storyboard in Resources */,
 				2C4974A22126F87F006A60D3 /* silentMusic.mp3 in Resources */,
-				2C85AD0521020197007E88FA /* goHome.mp3 in Resources */,
 				2C9111A22127BB29006CEEB7 /* hotaru2.jpg in Resources */,
+				2C4ADE7A2130224400EFC6D4 /* goHome.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

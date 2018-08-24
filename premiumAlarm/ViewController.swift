@@ -198,6 +198,11 @@ class ViewController: UIViewController, AVAudioPlayerDelegate, UITextFieldDelega
             alarmSwitch.isOn = false
             //初めから再生
             audioPlayer.currentTime = 0
+            
+            nowTimeLabel.textColor = .white
+            nowWeekDayLabel.textColor = .white
+            stopButton.backgroundColor = .blue
+            stopButton.backgroundColor = .blue
             //セーブ
             //self.saveData()
         }
